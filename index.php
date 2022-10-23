@@ -13,8 +13,34 @@ session_start();
 </head>
 <?php
 
-obtenirLletres();
-print_r($_SESSION["funcions"]);
+if($_SERVER["REQUEST_METHOD"] = "GET") {
+    if(isset($_GET["sol"])){
+        foreach($_SESSION["solucions"] as $funcio){
+            echo $funcio . " ";
+        }
+    }
+    if(isset($_GET["neteja"])) {
+        session_unset();
+    }
+}
+
+if(isset($_GET["data"])){
+    srand(seed($_GET["data"]));
+    $_SESSION['date'] = $_GET["data"];
+    obtenirLletres();
+}
+elseif(!isset($_SESSION['date'])) {
+        $_SESSION['date'] = date('m-d-y');
+        srand(seed($_SESSION['date']));
+        obtenirLletres();
+
+} elseif ($_SESSION['date'] != date('m-d-y')) {
+    session_unset();
+    $_SESSION['date'] = date('m-d-y');
+    srand(seed($_SESSION['date']));
+    obtenirLletres();
+
+}
 
 //Funció que agafa totes les funcions definides de php per defecte
 function obtenirFuncions() {
@@ -26,7 +52,6 @@ function obtenirFuncions() {
 //Obté lletres aleatories depenent de la seed de cada dia
 function obtenirLletres() {
     $alfabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","_","0","1","2","3","4","5","6","7","8","9"];
-    srand(seed());
     $composenFuncions = false;
     while(!$composenFuncions) {
         $lletres = array();
@@ -49,10 +74,6 @@ un cop generades les noves lletres*/
 function composen3Funcions($lletres) {
     $funcionsArray = obtenirFuncions();
     $comptador = 0;
-    print_r($lletres);
-    if(in_array("_", $lletres)) {
-        $comptador--;
-    }
     foreach($funcionsArray as $funcions => $funcio){
         $caracters = str_split($funcio);
         $validar = true;
@@ -66,7 +87,6 @@ function composen3Funcions($lletres) {
             }
         }
         if($validar){
-            echo $funcio. "<br>";
             $comptador++;
             $_SESSION["funcions"][] = $funcio;
         }
@@ -75,14 +95,14 @@ function composen3Funcions($lletres) {
         unset($_SESSION["funcions"]);
         return false;
     } else {
+        $_SESSION["solucions"] = $_SESSION["funcions"];
         return true;
     }
 
 }
 
 //funcio per escollir una seed depenent del dia
-function seed(){
-    $data = date("d-m-Y");
+function seed($data){
     $data = strtotime($data);
     return $data;
 }
@@ -104,9 +124,9 @@ function barrejar() {
     <h1>
         <a href=""><img src="logo.png" height="54" class="logo" alt="PHPlògic"></a>
     </h1>
-    <!--<div class="container-notifications">
-        <p class="hide" id="message" style="">MISSATGE D'ERROR</p>
-    </div>-->
+    <div class="container-notifications">
+        <!-- <p display=none class="hide" id="message" >La funció de PHP no existeix</p> -->
+    </div>
     <div class="cursor-container">
         <p id="input-word"><span id="test-word"></span><span id="cursor">|</span></p>
         <input type="hidden" name="paraula" id="paraula">
@@ -148,9 +168,20 @@ function barrejar() {
         <button id="submit-button" type="submit" title="Introdueix la paraula">Introdueix</button>
     </div>
     <div class="scoreboard">
-        <div>Has trobat <span id="letters-found">0</span> <span id="found-suffix">funcions</span><span id="discovered-text">.</span>
+        <div>Has trobat <span id="letters-found"><?php if(isset($_SESSION["comptador"])){
+            echo $_SESSION["comptador"];
+        } else {
+            echo 0;
+        }  ?></span> <span id="found-suffix">funcions</span><span id="discovered-text">.</span>
         </div>
-        <div id="score"><?php echo "Comptador: ".$_SESSION["comptador"] ?></div>
+        <div id="score"><?php
+        echo "Comptador: ";
+        if(isset($_SESSION["comptador"])){
+            echo $_SESSION["comptador"];
+        } else {
+            echo 0;
+        }
+        ?></div>
         <div id="level"><?php if(isset($_SESSION["funcionsTrobades"])){
             echo "Les funcions trobades son: ";
             foreach($_SESSION["funcionsTrobades"] as $trobades){

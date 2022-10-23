@@ -3,6 +3,16 @@ h1,p,ul {
     padding: 0;
 }
 
+#message {
+    position: absolute;
+    background-color: #ec4a49;
+    color: #fff;
+    border-radius: 3px;
+    padding: 5px;
+    z-index: 100;
+    pointer-events: none;
+}
+
 .main {
     margin: 0 auto;
     max-width: 800px;
