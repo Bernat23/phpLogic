@@ -26,18 +26,18 @@ if($_SERVER["REQUEST_METHOD"] = "GET") {
 
 if(isset($_GET["data"])){
     srand(seed($_GET["data"]));
-    $_SESSION['date'] = $_GET["data"];
+    $_SESSION['data'] = $_GET["data"];
     obtenirLletres();
 }
-elseif(!isset($_SESSION['date'])) {
-        $_SESSION['date'] = date('m-d-y');
-        srand(seed($_SESSION['date']));
+elseif(!isset($_SESSION['data'])) {
+        $_SESSION['data'] = date('m-d-y');
+        srand(seed($_SESSION['data']));
         obtenirLletres();
 
-} elseif ($_SESSION['date'] != date('m-d-y')) {
+} elseif ($_SESSION['data'] != date('m-d-y')) {
     session_unset();
-    $_SESSION['date'] = date('m-d-y');
-    srand(seed($_SESSION['date']));
+    $_SESSION['data'] = date('m-d-y');
+    srand(seed($_SESSION['data']));
     obtenirLletres();
 
 }

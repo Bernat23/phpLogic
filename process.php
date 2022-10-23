@@ -3,6 +3,7 @@ session_start();
 if(isset($_POST["paraula"])){
     $comptador = 0;
     $parar = false;
+    array_values($_SESSION["funcions"]);
     foreach($_SESSION["funcions"] as $funcio) {
         if(strcmp($funcio, $_POST["paraula"]) == 0){
             $_SESSION["funcionsTrobades"][] = $funcio;  
@@ -38,9 +39,16 @@ if(isset($_POST["paraula"])){
         }
     }
 }
-array_values($_SESSION["funcions"]);
+
+
 if(empty($_SESSION["funcions"])){
     $_SESSION["error"] = "Ja tens totes les funcions";
 }
-header("Location:index.php", true, 302);
+if($_SESSION['data'] != date('m-d-y')){
+    header("Location:index.php?data=" . $_SESSION["data"], true, 302);
+    echo $_SESSION["data"];  
+} else {
+    header("Location:index.php", true, 302);
+}
+
 ?>
