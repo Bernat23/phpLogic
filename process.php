@@ -45,8 +45,7 @@ if(empty($_SESSION["funcions"])){
     $_SESSION["error"] = "Ja tens totes les funcions";
 }
 if($_SESSION['data'] != date('m-d-y')){
-    header("Location:index.php?data=" . $_SESSION["data"], true, 302);
-    echo $_SESSION["data"];  
+    header("Location:index.php?data=" . $_SESSION["data"], true, 302); 
 } else {
     header("Location:index.php", true, 302);
 }
